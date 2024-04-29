@@ -1,0 +1,40 @@
+Explore Azure Synapse Analytics
+Azure Synapse Analytics provides a single, consolidated data analytics platform for end-to end data analytics. In this exercise, you’ll explore various ways to ingest and explore data. This exercise is designed as a high-level overview of the various core capabilities of Azure Synapse Analytics. Other exercises are available to explore specific capabilities in more detail.
+
+This exercise should take approximately 60 minutes to complete.
+
+Before you start
+You’ll need an Azure subscription in which you have administrative-level access.
+
+Provision an Azure Synapse Analytics workspace
+An Azure Synapse Analytics workspace provides a central point for managing data and data processing runtimes. You can provision a workspace using the interactive interface in the Azure portal, or you can deploy a workspace and resources within it by using a script or template. In most production scenarios, it’s best to automate provisioning with scripts and templates so that you can incorporate resource deployment into a repeatable development and operations (DevOps) process.
+
+In this exercise, you’ll use a combination of a PowerShell script and an ARM template to provision Azure Synapse Analytics.
+
+In a web browser, sign into the Azure portal at https://portal.azure.com.
+Use the [>_] button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a PowerShell environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
+
+Note that you can resize the cloud shell by dragging the separator bar at the top of the pane, or by using the —, ◻, and X icons at the top right of the pane to minimize, maximize, and close the pane. For more information about using the Azure Cloud Shell, see the Azure Cloud Shell documentation.
+
+In the PowerShell pane, enter the following commands to clone this repo:
+
+Code
+ rm -r dp-203 -f
+ git clone https://github.com/MicrosoftLearning/dp-203-azure-data-engineer dp-203
+After the repo has been cloned, enter the following commands to change to the folder for this exercise and run the setup.ps1 script it contains:
+
+Code
+ cd dp-203/Allfiles/labs/01
+ ./setup.ps1
+If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
+When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+
+Note: Be sure to remember this password! Additionally, the password cannot contain all or part of the login name.
+
+Wait for the script to complete - this typically takes around 20 minutes, but in some cases may take longer. While you are waiting, review the What is Azure Synapse Analytics? article in the Azure Synapse Analytics documentation.
+Explore Synapse Studio
+Synapse Studio is a web-based portal in which you can manage and work with the resources in your Azure Synapse Analytics workspace.
+
+When the setup script has finished running, in the Azure portal, go to the dp203-xxxxxxx resource group that it created, and notice that this resource group contains your Synapse workspace, a Storage account for your data lake, an Apache Spark pool, a Data Explorer pool, and a Dedicated SQL pool.
+Select your Synapse workspace, and in its Overview page, in the Open Synapse Studio card, select Open to open Synapse Studio in a new browser tab. Synapse Studio is a web-based interface that you can use to work with your Synapse Analytics workspace.
+On the left side of Synapse Studio, use the ›› icon to expand the menu - this reveals the different pages within Synapse Studio that you’ll use to manage resources and perform data analytics tasks, as shown here:
