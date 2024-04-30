@@ -1,0 +1,217 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "synapse2hz5bwi"
+		},
+		"synapse2hz5bwi-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'synapse2hz5bwi-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapse2hz5bwi.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapse2hz5bwi-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://datalake2hz5bwi.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapse2hz5bwi-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('synapse2hz5bwi-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapse2hz5bwi-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('synapse2hz5bwi-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create Sales DB')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE DATABASE Sales\n    COLLATE Latin1_General_100_BIN2_UTF8;\nGO;\n\nUSE Sales;\nGO;\n\nCREATE EXTERNAL DATA SOURCE Sales_Data WITH (\n    LOCATION = 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/'\n);\nGO;\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Sales",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Sales CSV query 2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/csv/**',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0'\n    ) AS [result]\n\n\n\nSELECT\n    TOP 100 *\nFROM\n     OPENROWSET(\n         BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/csv/**',\n         FORMAT = 'CSV',\n         PARSER_VERSION='2.0'\n     )\nWith(\n    SalesOrderNumber VARCHAR (10) COLLATE Latin1_General_100_BIN2_UTF8,\n    SlaesOrderLineNumber INT,\n    OrderDate DATE,\n    CustomerName VARCHAR (25) COLLATE  Latin1_General_100_BIN2_UTF8,\n    EmailAddress VARCHAR (50) COLLATE  Latin1_General_100_BIN2_UTF8,\n    Item VARCHAR (30) COLLATE  Latin1_General_100_BIN2_UTF8,\n    Quantity INT,\n    UnitPrice DECIMAL (18,2),\n    TaxAmount DECIMAL (18,2)\n) AS [RESULT]\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Sales CSV query')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/csv/**',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0'\n    ) \n    WITH(\n        SalesOrderNumber VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n        SalesOderLineNumber INT,\n        OrderDate DATE,\n        CustomerName VARCHAR (25) COLLATE Latin1_General_100_BIN2_UTF8,\n        EmailAddress VARCHAR (50) COLLATE Latin1_General_100_BIN2_UTF8,\n        Item VARCHAR (30) COLLATE Latin1_General_100_BIN2_UTF8,\n        Quantity INT,\n        UnitPrice DECIMAL (18,2),\n        TaxAmount DECIMAL (18,2)\n    )\n    AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": -1
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Sales Parquet query 2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\n\n\nSELECT YEAR(OrderDate) AS OrderYear,\nCOUNT(*) AS OrderItems\nFROM\n    OPENROWSET (\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET' \n    ) AS [result]\nGROUP BY Year(OrderDate)\nORDER BY OrderYear\n\n\nSELECT YEAR(OrderDate) AS OrderYear,\n    COUNT(*) AS OrderItems\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\nWHERE [result].filepath(1) IN ('2019', '2020')\nGROUP BY YEAR(OrderDate)\nORDER BY OrderYear ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Sales Parquet query')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT YEAR(OrderDate) AS OrderYear,\n       COUNT(*) AS OrderedItems\nFROM\n    OPENROWSET (\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\nGROUP BY YEAR(OrderDate)\nORDER by OrderYear\n\n\nSELECT YEAR(OrderDate) AS OrderYear,\n       COUNT(*) AS OrderedItems\nFROM\n    OPENROWSET (\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/year=*/', --here we have modified the path\n        FORMAT = 'PARQUET'\n    ) AS [result]\nWHERE [result].filepath(1) IN ('2019', '2020')\nGROUP BY YEAR(OrderDate)\nORDER by OrderYear\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": -1
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dbo orders')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": " CREATE EXTERNAL FILE FORMAT CsvFormat\n     WITH (\n         FORMAT_TYPE = DELIMITEDTEXT,\n         FORMAT_OPTIONS(\n         FIELD_TERMINATOR = ',',\n         STRING_DELIMITER = '\"'\n         )\n     );\n GO;\n\n CREATE EXTERNAL TABLE dbo.orders\n (\n     SalesOrderNumber VARCHAR(10),\n     SalesOrderLineNumber INT,\n     OrderDate DATE,\n     CustomerName VARCHAR(25),\n     EmailAddress VARCHAR(50),\n     Item VARCHAR(30),\n     Quantity INT,\n     UnitPrice DECIMAL(18,2),\n     TaxAmount DECIMAL (18,2)\n )\n WITH\n (\n     DATA_SOURCE = Sales_Data,\n     LOCATION = 'csv/*.csv',\n     FILE_FORMAT = CsvFormat\n );\n GO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Sales",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		}
+	]
+}
