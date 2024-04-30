@@ -1,0 +1,17 @@
+{
+	"name": "Sales Parquet query 2",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\n\n\nSELECT YEAR(OrderDate) AS OrderYear,\nCOUNT(*) AS OrderItems\nFROM\n    OPENROWSET (\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET' \n    ) AS [result]\nGROUP BY Year(OrderDate)\nORDER BY OrderYear\n\n\nSELECT YEAR(OrderDate) AS OrderYear,\n    COUNT(*) AS OrderItems\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\nWHERE [result].filepath(1) IN ('2019', '2020')\nGROUP BY YEAR(OrderDate)\nORDER BY OrderYear ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

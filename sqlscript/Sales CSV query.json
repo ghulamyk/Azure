@@ -1,0 +1,17 @@
+{
+	"name": "Sales CSV query",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2hz5bwi.dfs.core.windows.net/files/sales/csv/**',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0'\n    ) \n    WITH(\n        SalesOrderNumber VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n        SalesOderLineNumber INT,\n        OrderDate DATE,\n        CustomerName VARCHAR (25) COLLATE Latin1_General_100_BIN2_UTF8,\n        EmailAddress VARCHAR (50) COLLATE Latin1_General_100_BIN2_UTF8,\n        Item VARCHAR (30) COLLATE Latin1_General_100_BIN2_UTF8,\n        Quantity INT,\n        UnitPrice DECIMAL (18,2),\n        TaxAmount DECIMAL (18,2)\n    )\n    AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": -1
+		},
+		"type": "SqlQuery"
+	}
+}
