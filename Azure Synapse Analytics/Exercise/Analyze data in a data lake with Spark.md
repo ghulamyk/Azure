@@ -1,5 +1,4 @@
-**Analyze data in a data lake with Spark**
-
+Analyze data in a data lake with Spark
 Apache Spark is an open source engine for distributed data processing, and is widely used to explore, process, and analyze huge volumes of data in data lake storage. Spark is available as a processing option in many data platform products, including Azure HDInsight, Azure Databricks, and Azure Synapse Analytics on the Microsoft Azure cloud platform. One of the benefits of Spark is support for a wide range of programming languages, including Java, Scala, Python, and SQL; making Spark a very flexible solution for data processing workloads including data cleansing and manipulation, statistical analysis and machine learning, and data analytics and visualization.
 
 This lab will take approximately 45 minutes to complete.
@@ -12,17 +11,17 @@ You’ll need an Azure Synapse Analytics workspace with access to data lake stor
 
 In this exercise, you’ll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
 
-Sign into the Azure portal at
-https://portal.azure.com.
-```
+Sign into the Azure portal at https://portal.azure.com.
 Use the [>_] button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a PowerShell environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
 Note that you can resize the cloud shell by dragging the separator bar at the top of the pane, or by using the —, ◻, and X icons at the top right of the pane to minimize, maximize, and close the pane. For more information about using the Azure Cloud Shell, see the Azure Cloud Shell documentation.
 
-
 In the PowerShell pane, enter the following commands to clone this repo:
+
+```python
  rm -r dp500 -f
  git clone https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst dp500
+```
 
 After the repo has been cloned, enter the following commands to change to the folder for this lab and run the setup.ps1 script it contains:
 
@@ -30,15 +29,16 @@ After the repo has been cloned, enter the following commands to change to the fo
  cd dp500/Allfiles/02
  ./setup.ps1
 ```
-
 If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
 When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
 
 Wait for the script to complete - this typically takes around 10 minutes, but in some cases may take longer. While you are waiting, review the Apache Spark in Azure Synapse Analytics article in the Azure Synapse Analytics documentation.
 Query data in files
+
 The script provisions an Azure Synapse Analytics workspace and an Azure Storage account to host the data lake, then uploads some data files to the data lake.
 
-View files in the data lake
+**View files in the data lake**
+
 After the script has completed, in the Azure portal, go to the dp500-xxxxxxx resource group that it created, and select your Synapse workspace.
 
 In the Overview page for your Synapse workspace, in the Open Synapse Studio card, select Open to open Synapse Studio in a new browser tab; signing in if prompted.
@@ -77,8 +77,20 @@ While you are waiting for the Spark session to initialize, review the code that 
 ```
 
 When the code has finished running, review the output beneath the cell in the notebook. It shows the first ten rows in the file you selected, with automatic column names in the form _c0, _c1, _c2, and so on.
-
 Modify the code so that the spark.read.load function reads data from all of the CSV files in the folder, and the display function shows the first 100 rows. Your code should look like this (with datalakexxxxxxx matching the name of your data lake store):
+
+```python
+ %%pyspark
+ df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/sales/orders/*.csv', format='csv'
+ )
+ display(df.limit(100))
+```
+
+Use the ▷ button to the left of the code cell to run just that cell, and review the results.
+
+The dataframe now includes data from all of the files, but the column names are not useful. Spark uses a “schema-on-read” approach to try to determine appropriate data types for the columns based on the data they contain, and if a header row is present in a text file it can be used to identify the column names (by specifying a header=True parameter in the load function). Alternatively, you can define an explicit schema for the dataframe.
+
+Modify the code as follows (replacing datalakexxxxxxx), to define an explicit schema for the dataframe that includes the column names and data types. Rerun the code in the cell.
 
 ```python
  %%pyspark
@@ -96,12 +108,16 @@ Modify the code so that the spark.read.load function reads data from all of the 
      StructField("UnitPrice", FloatType()),
      StructField("Tax", FloatType())
      ])
+```
 
+
+```python
  df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/sales/orders/*.csv', format='csv', schema=orderSchema)
  display(df.limit(100))
 ```
 
 Under the results, use the + Code button to add a new code cell to the notebook. Then in the new cell, add the following code to display the dataframe’s schema:
+
 
 ```python
  df.printSchema()
@@ -109,16 +125,16 @@ Under the results, use the + Code button to add a new code cell to the notebook.
 
 Run the new cell and verify that the dataframe schema matches the orderSchema you defined. The printSchema function can be useful when using a dataframe with an automatically inferred schema.
 
-**Analyze data in a dataframe**
+**Analyze data in a **dataframe**
 
 The dataframe object in Spark is similar to a Pandas dataframe in Python, and includes a wide range of functions that you can use to manipulate, filter, group, and otherwise analyze the data it contains.
 
-Filter a dataframe
+**Filter a dataframe**
 
 Add a new code cell to the notebook, and enter the following code in it:
 
 ```python
-customers = df['CustomerName', 'Email']
+ customers = df['CustomerName', 'Email']
  print(customers.count())
  print(customers.distinct().count())
  display(customers.distinct())
@@ -129,8 +145,7 @@ Run the new code cell, and review the results. Observe the following details:
 When you perform an operation on a dataframe, the result is a new dataframe (in this case, a new customers dataframe is created by selecting a specific subset of columns from the df dataframe)
 
 Dataframes provide functions such as count and distinct that can be used to summarize and filter the data they contain.
-
-The dataframe **['Field1', 'Field2', ...]** syntax is a shorthand way of defining a subset of column. You can also use select method, so the first line of the code above could be written as  **customers = df.select("CustomerName", "Email")**
+The dataframe['Field1', 'Field2', ...] syntax is a shorthand way of defining a subset of column. You can also use select method, so the first line of the code above could be written as customers = df.select("CustomerName", "Email")
 
 Modify the code as follows:
 
@@ -144,17 +159,6 @@ Modify the code as follows:
 Run the modified code to view the customers who have purchased the Road-250 Red, 52 product. Note that you can “chain” multiple functions together so that the output of one function becomes the input for the next - in this case, the dataframe created by the select method is the source dataframe for the where method that is used to apply filtering criteria.
 
 **Aggregate and group data in a dataframe**
-
-Add a new code cell to the notebook, and enter the following code in it:
-
-```python
- productSales = df.select("Item", "Quantity").groupBy("Item").sum()
- display(productSales)
-```
-
-Run the modified code to view the customers who have purchased the Road-250 Red, 52 product. Note that you can “chain” multiple functions together so that the output of one function becomes the input for the next - in this case, the dataframe created by the select method is the source dataframe for the where method that is used to apply filtering criteria.
-
-Aggregate and group data in a dataframe
 
 Add a new code cell to the notebook, and enter the following code in it:
 
@@ -234,21 +238,17 @@ Add a new code cell to the notebook, and enter the following code in it:
  %%sql
  SELECT * FROM salesorders
 ```
-
 Run the code and observe that it returns the data from the salesorders view you created previously.
 
 In the results section beneath the cell, change the View option from Table to Chart.
 
-Use the View options button at the top right of the chart to display the options pane for the chart. Then set the options as follows 
-and select Apply:
-
+Use the View options button at the top right of the chart to display the options pane for the chart. Then set the options as follows and select Apply:
 Chart type: Bar chart
 Key: Item
 Values: Quantity
 Series Group: leave blank
 Aggregation: Sum
 Stacked: Unselected
-
 
 **Get started with matplotlib**
 
@@ -288,9 +288,7 @@ Run the cell and review the results, which consist of a column chart with the to
 The matplotlib library requires a Pandas dataframe, so you need to convert the Spark dataframe returned by the Spark SQL query to this format.
 
 At the core of the matplotlib library is the pyplot object. This is the foundation for most plotting functionality.
-
 The default settings result in a usable chart, but there’s considerable scope to customize it
-
 Modify the code to plot the chart as follows:
 
 ```python
@@ -310,7 +308,6 @@ Modify the code to plot the chart as follows:
  # Show the figure
  plt.show()
 ```
-
 Re-run the code cell and view the results. The chart now includes a little more information.
 
 A plot is technically contained with a Figure. In the previous examples, the figure was created implicitly for you; but you can create it explicitly.
@@ -337,7 +334,6 @@ Modify the code to plot the chart as follows:
  # Show the figure
  plt.show()
 ```
-
 Re-run the code cell and view the results. The figure determines the shape and size of the plot.
 
 A figure can contain multiple subplots, each on its own axis.
@@ -367,12 +363,9 @@ Modify the code to plot the chart as follows:
  # Show the figure
  plt.show()
 ```
-
 Re-run the code cell and view the results. The figure contains the subplots specified in the code.
 
-Note: To learn more about plotting with matplotlib, see the matplotlib documentation.
-
-Use the seaborn library
+**Use the seaborn library**
 
 While matplotlib enables you to create complex charts of multiple types, it can require some complex code to achieve the best results. For this reason, over the years, many new libraries have been built on the base of matplotlib to abstract its complexity and enhance its capabilities. One such library is seaborn.
 
@@ -403,7 +396,6 @@ Add a new code cell to the notebook, and enter the following code in it:
  ax = sns.barplot(x="OrderYear", y="GrossRevenue", data=df_sales)
  plt.show()
 ```
- 
 Run the code and note that seaborn enables you to set a consistent color theme for your plots.
 
 Add a new code cell to the notebook, and enter the following code in it:
@@ -416,21 +408,4 @@ Add a new code cell to the notebook, and enter the following code in it:
  ax = sns.lineplot(x="OrderYear", y="GrossRevenue", data=df_sales)
  plt.show()
 ```
-
 Run the code to view the yearly revenue as a line chart.
-Note: To learn more about plotting with seaborn, see the seaborn documentation.
-
-**Delete Azure resources**
-
-If you’ve finished exploring Azure Synapse Analytics, you should delete the resources you’ve created to avoid unnecessary Azure costs.
-
-Close the Synapse Studio browser tab and return to the Azure portal.
-On the Azure portal, on the Home page, select Resource groups.
-
-Select the dp500-xxxxxxx resource group for your Synapse Analytics workspace (not the managed resource group), and verify that it contains the Synapse workspace, storage account, and Spark pool for your workspace.
-
-At the top of the Overview page for your resource group, select Delete resource group.
-
-Enter the dp500-xxxxxxx resource group name to confirm you want to delete it, and select Delete.
-
-After a few minutes, your Azure Synapse workspace resource group and the managed workspace resource group associated with it will be deleted.
