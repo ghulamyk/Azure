@@ -128,23 +128,23 @@
 				"FormatType": "csv",
 				"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
 				"Properties": {
-					"path": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/RetailProduct",
+					"path": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Product",
 					"delimiter": ",",
 					"multiLine": "false",
 					"firstRowAsHeader": "false",
 					"serialization.format": "1",
 					"escape": "\\",
 					"quote": "\"",
-					"FormatTypeSetToDatabaseDefault": true,
+					"FormatTypeSetToDatabaseDefault": false,
 					"header": "false"
 				}
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/RetailProduct",
+				"Location": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Product",
 				"Properties": {
 					"LinkedServiceName": "synapse2hz5bwi-WorkspaceDefaultStorage",
-					"LocationSetToDatabaseDefault": true
+					"LocationSetToDatabaseDefault": false
 				}
 			},
 			"Properties": {
