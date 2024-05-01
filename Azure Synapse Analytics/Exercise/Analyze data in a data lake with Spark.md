@@ -151,3 +151,71 @@ Add a new code cell to the notebook, and enter the following code in it:
  productSales = df.select("Item", "Quantity").groupBy("Item").sum()
  display(productSales)
 ```
+
+Run the modified code to view the customers who have purchased the Road-250 Red, 52 product. Note that you can “chain” multiple functions together so that the output of one function becomes the input for the next - in this case, the dataframe created by the select method is the source dataframe for the where method that is used to apply filtering criteria.
+
+Aggregate and group data in a dataframe
+
+Add a new code cell to the notebook, and enter the following code in it:
+
+Code
+ productSales = df.select("Item", "Quantity").groupBy("Item").sum()
+ display(productSales)
+
+Run the code cell you added, and note that the results show the sum of order quantities grouped by product. The groupBy method groups the rows by Item, and the subsequent sum aggregate function is applied to all of the remaining numeric columns (in this case, Quantity)
+
+Add another new code cell to the notebook, and enter the following code in it:
+
+Code
+ yearlySales = df.select(year("OrderDate").alias("Year")).groupBy("Year").count().orderBy("Year")
+ display(yearlySales)
+
+Run the code cell you added, and note that the results show the number of sales orders per year. Note that the select method includes a SQL year function to extract the year component of the OrderDate field, and then an alias method is used to assign a columm name to the extracted year value. The data is then grouped by the derived Year column and the count of rows in each group is calculated before finally the orderBy method is used to sort the resulting dataframe.
+
+**Query data using Spark SQL**
+
+As you’ve seen, the native methods of the dataframe object enable you to query and analyze data quite effectively. However, many data analysts are more comfortable working with SQL syntax. Spark SQL is a SQL language API in Spark that you can use to run SQL statements, or even persist data in relational tables.
+
+**Use Spark SQL in PySpark code**
+
+The default language in Azure Synapse Studio notebooks is PySpark, which is a Spark-based Python runtime. Within this runtime, you can use the spark.sql library to embed Spark SQL syntax within your Python code, and work with SQL constructs such as tables and views.
+
+Add a new code cell to the notebook, and enter the following code in it:
+
+```python
+ df.createOrReplaceTempView("salesorders")
+
+ spark_df = spark.sql("SELECT * FROM salesorders")
+ display(spark_df)
+```
+
+Run the cell and review the results. Observe that:
+
+The code persists the data in the df dataframe as a temporary view named salesorders. Spark SQL supports the use of temporary views or persisted tables as sources for SQL queries.
+
+The spark.sql method is then used to run a SQL query against the salesorders view.
+
+The results of the query are stored in a dataframe.
+
+Run SQL code in a cell
+
+While it’s useful to be able to embed SQL statements into a cell containing PySpark code, data analysts often just want to work directly in SQL.
+
+Add a new code cell to the notebook, and enter the following code in it:
+
+```python
+ %%sql
+ SELECT YEAR(OrderDate) AS OrderYear,
+        SUM((UnitPrice * Quantity) + Tax) AS GrossRevenue
+ FROM salesorders
+ GROUP BY YEAR(OrderDate)
+ ORDER BY OrderYear;
+```
+
+Run the cell and review the results. Observe that:
+
+The %%sql line at the beginning of the cell (called a magic) indicates that the Spark SQL language runtime should be used to run the code in this cell instead of PySpark.
+
+The SQL code references the salesorder view that you created previously using PySpark.
+
+The output from the SQL query is automatically displayed as the result under the cell.
