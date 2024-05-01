@@ -1,0 +1,22 @@
+{
+	"name": "RetailDB",
+	"properties": {
+		"Name": "RetailDB",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "synapse2hz5bwi-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
