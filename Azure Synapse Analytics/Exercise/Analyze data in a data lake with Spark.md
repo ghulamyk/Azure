@@ -158,17 +158,19 @@ Aggregate and group data in a dataframe
 
 Add a new code cell to the notebook, and enter the following code in it:
 
-Code
+```python
  productSales = df.select("Item", "Quantity").groupBy("Item").sum()
  display(productSales)
+```
 
 Run the code cell you added, and note that the results show the sum of order quantities grouped by product. The groupBy method groups the rows by Item, and the subsequent sum aggregate function is applied to all of the remaining numeric columns (in this case, Quantity)
 
 Add another new code cell to the notebook, and enter the following code in it:
 
-Code
+```python
  yearlySales = df.select(year("OrderDate").alias("Year")).groupBy("Year").count().orderBy("Year")
  display(yearlySales)
+```
 
 Run the code cell you added, and note that the results show the number of sales orders per year. Note that the select method includes a SQL year function to extract the year component of the OrderDate field, and then an alias method is used to assign a columm name to the extracted year value. The data is then grouped by the derived Year column and the count of rows in each group is calculated before finally the orderBy method is used to sort the resulting dataframe.
 
