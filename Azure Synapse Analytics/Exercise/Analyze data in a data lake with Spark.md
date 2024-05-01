@@ -17,16 +17,12 @@ https://portal.azure.com.
 ```
 Use the [>_] button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a PowerShell environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
-
 Note that you can resize the cloud shell by dragging the separator bar at the top of the pane, or by using the —, ◻, and X icons at the top right of the pane to minimize, maximize, and close the pane. For more information about using the Azure Cloud Shell, see the Azure Cloud Shell documentation.
 
+
 In the PowerShell pane, enter the following commands to clone this repo:
-
-
-```python
  rm -r dp500 -f
  git clone https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst dp500
-```
 
 After the repo has been cloned, enter the following commands to change to the folder for this lab and run the setup.ps1 script it contains:
 
