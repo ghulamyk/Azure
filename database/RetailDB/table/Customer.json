@@ -89,7 +89,7 @@
 				"FormatType": "csv",
 				"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
 				"Properties": {
-					"path": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Customer/Customer",
+					"path": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Customer",
 					"delimiter": ",",
 					"multiLine": "false",
 					"firstRowAsHeader": "false",
@@ -102,7 +102,7 @@
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Customer/Customer",
+				"Location": "abfss://files@datalake2hz5bwi.dfs.core.windows.net/RetailDB/Customer",
 				"Properties": {
 					"LinkedServiceName": "synapse2hz5bwi-WorkspaceDefaultStorage",
 					"LocationSetToDatabaseDefault": false
