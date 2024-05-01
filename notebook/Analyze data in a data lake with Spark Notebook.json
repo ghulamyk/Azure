@@ -1,0 +1,241 @@
+{
+	"name": "Analyze data in a data lake with Spark Notebook",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "3ef67418-1797-43d0-bd44-dd7aba7e3621"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f9d86f3-8491-4c51-b73d-2a72034825b3/resourceGroups/dp500-2hz5bwi/providers/Microsoft.Synapse/workspaces/synapse2hz5bwi/bigDataPools/sparkpool",
+				"name": "sparkpool",
+				"type": "Spark",
+				"endpoint": "https://synapse2hz5bwi.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://files@datalake2hz5bwi.dfs.core.windows.net/sales/csv/2019.csv', format='csv'\r\n",
+					"## If header exists uncomment line below\r\n",
+					"##, header=True\r\n",
+					")\r\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"from pyspark.sql.types import *\r\n",
+					"from pyspark.sql.functions import *\r\n",
+					"\r\n",
+					"orderscheme = StructType([\r\n",
+					"    StructField(\"SalesOrderNumber\", StringType()),\r\n",
+					"    StructField(\"SalesOrderLineNumber\", IntegerType()),\r\n",
+					"    StructField(\"OrderDate\", DateType()),\r\n",
+					"    StructField(\"CustomerName\", StringType()),\r\n",
+					"    StructField(\"Email\", StringType()),\r\n",
+					"    StructField(\"Item\", StringType()),\r\n",
+					"    StructField(\"Quantity\", IntegerType()),\r\n",
+					"    StructField(\"UnitPrice\", FloatType()),\r\n",
+					"    StructField(\"Tax\", FloatType())\r\n",
+					"])\r\n",
+					"\r\n",
+					"df = spark.read.load('abfss://files@datalake2hz5bwi.dfs.core.windows.net/sales/csv/2019.csv', format= 'csv', schema=orderscheme)\r\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.printSchema()"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"customers = df['CustomerName', 'Email']\r\n",
+					"print(customers.count())\r\n",
+					"print(customers.distinct().count())\r\n",
+					"display(customers.distinct())"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"customers = df.select(\"CustomerName\", \"Email\").where(df['Item']=='Mountain-100 Silver, 44')\r\n",
+					"print(customers.count())\r\n",
+					"print(customers.distinct().count())\r\n",
+					"display(customers.distinct())"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"productSales = df.select(\"Item\", \"Quantity\").groupBy(\"Item\").sum()\r\n",
+					"display(productSales)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"df.createOrReplaceTempView(\"salesorders\")\r\n",
+					"\r\n",
+					"spark_df = spark.sql(\"SELECT * FROM salesorders\")\r\n",
+					"display(spark_df)"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"SELECT year(OrderDate) AS OrderYear,\r\n",
+					"    SUM((UnitPrice * Quantity) + Tax) AS GrossRevenue\r\n",
+					"FROM salesorders\r\n",
+					"GROUP BY year(OrderDate)\r\n",
+					"ORDER BY OrderYear;"
+				],
+				"execution_count": 27
+			}
+		]
+	}
+}
