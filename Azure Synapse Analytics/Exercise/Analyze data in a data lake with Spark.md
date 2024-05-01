@@ -140,3 +140,14 @@ Modify the code as follows:
  print(customers.distinct().count())
  display(customers.distinct())
 ```
+
+Run the modified code to view the customers who have purchased the Road-250 Red, 52 product. Note that you can “chain” multiple functions together so that the output of one function becomes the input for the next - in this case, the dataframe created by the select method is the source dataframe for the where method that is used to apply filtering criteria.
+
+**Aggregate and group data in a dataframe**
+
+Add a new code cell to the notebook, and enter the following code in it:
+
+```python
+ productSales = df.select("Item", "Quantity").groupBy("Item").sum()
+ display(productSales)
+```
