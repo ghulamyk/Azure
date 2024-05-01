@@ -1,0 +1,125 @@
+{
+	"name": "matplotlib",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "e0462662-83b4-4591-93c5-390f96ef2634"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f9d86f3-8491-4c51-b73d-2a72034825b3/resourceGroups/dp500-2hz5bwi/providers/Microsoft.Synapse/workspaces/synapse2hz5bwi/bigDataPools/sparkpool",
+				"name": "sparkpool",
+				"type": "Spark",
+				"endpoint": "https://synapse2hz5bwi.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"sqlQuery = \"SELECT CAST(YEAR(OrderDate) AS CHAR(4)) AS OrderYear, \\\r\n",
+					"                 SUM((UnitPrice * Quantity) + Tax) AS GrossRevenue \\\r\n",
+					"             FROM salesorders \\\r\n",
+					"             GROUP BY CAST(YEAR(OrderDate) AS CHAR(4)) \\\r\n",
+					"             ORDER BY OrderYear\"\r\n",
+					"df_spark = spark.sql(sqlQuery)\r\n",
+					"df_spark.show()"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from matplotlib import pyplot as plt\r\n",
+					"\r\n",
+					"#matplotlib requires aPandas dataframe, not a Spark one\r\n",
+					"df_sales = df_spark.toPandas()\r\n",
+					"\r\n",
+					"#Create a bar plot of revenue by year\r\n",
+					"plt.bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'])\r\n",
+					"\r\n",
+					"#Diplay the plot\r\n",
+					"plt.show"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Clear the plot area\r\n",
+					"plt.clf()\r\n",
+					"\r\n",
+					"# Create a bar plot of revenue by year\r\n",
+					"plt.bar(x=df_sales['OrderYear'], height=df_sales['GrossRevenue'], color='orange')\r\n",
+					"\r\n",
+					"# Customize the chart\r\n",
+					"plt.title('Revenue by Year')\r\n",
+					"plt.xlabel('Year')\r\n",
+					"plt.ylabel('Revenue')\r\n",
+					"plt.grid(color='#95a5a6', linestyle='--', linewidth=2, axis='y', alpha=0.7)\r\n",
+					"plt.xticks(rotation=45)\r\n",
+					"\r\n",
+					"# Show the figure\r\n",
+					"plt.show()"
+				],
+				"execution_count": 33
+			}
+		]
+	}
+}
