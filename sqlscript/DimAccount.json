@@ -1,0 +1,17 @@
+{
+	"name": "DimAccount",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimAccount]\n( \n\t[AccountKey] [int]  NOT NULL,\n\t[ParentAccountKey] [int]  NULL,\n\t[AccountCodeAlternateKey] [int]  NULL,\n\t[ParentAccountCodeAlternateKey] [int]  NULL,\n\t[AccountDescription] [nvarchar](50)  NULL,\n\t[AccountType] [nvarchar](50)  NULL,\n\t[Operator] [nvarchar](50)  NULL,\n\t[CustomMembers] [nvarchar](300)  NULL,\n\t[ValueType] [nvarchar](50)  NULL,\n\t[CustomMemberOptions] [nvarchar](200)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
