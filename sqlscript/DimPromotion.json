@@ -1,0 +1,17 @@
+{
+	"name": "DimPromotion",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimPromotion]\n( \n\t[PromotionKey] [int]  NOT NULL,\n\t[PromotionAlternateKey] [int]  NULL,\n\t[EnglishPromotionName] [nvarchar](255)  NULL,\n\t[SpanishPromotionName] [nvarchar](255)  NULL,\n\t[FrenchPromotionName] [nvarchar](255)  NULL,\n\t[DiscountPct] [float]  NULL,\n\t[EnglishPromotionType] [nvarchar](50)  NULL,\n\t[SpanishPromotionType] [nvarchar](50)  NULL,\n\t[FrenchPromotionType] [nvarchar](50)  NULL,\n\t[EnglishPromotionCategory] [nvarchar](50)  NULL,\n\t[SpanishPromotionCategory] [nvarchar](50)  NULL,\n\t[FrenchPromotionCategory] [nvarchar](50)  NULL,\n\t[StartDate] [datetime]  NOT NULL,\n\t[EndDate] [datetime]  NULL,\n\t[MinQty] [int]  NULL,\n\t[MaxQty] [int]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

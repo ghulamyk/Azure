@@ -1,0 +1,17 @@
+{
+	"name": "DimSalesTerritory",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimSalesTerritory]\n( \n\t[SalesTerritoryKey] [int]  NOT NULL,\n\t[SalesTerritoryAlternateKey] [int]  NULL,\n\t[SalesTerritoryRegion] [nvarchar](50)  NOT NULL,\n\t[SalesTerritoryCountry] [nvarchar](50)  NOT NULL,\n\t[SalesTerritoryGroup] [nvarchar](50)  NULL,\n\t[SalesTerritoryImage] [varbinary](max)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED INDEX \n\t(\n\t\t[SalesTerritoryKey] ASC\n\t)\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
