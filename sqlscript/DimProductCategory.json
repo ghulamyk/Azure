@@ -1,0 +1,17 @@
+{
+	"name": "DimProductCategory",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimProductCategory]\n( \n\t[ProductCategoryKey] [int]  NOT NULL,\n\t[ProductCategoryAlternateKey] [int]  NULL,\n\t[EnglishProductCategoryName] [nvarchar](50)  NOT NULL,\n\t[SpanishProductCategoryName] [nvarchar](50)  NOT NULL,\n\t[FrenchProductCategoryName] [nvarchar](50)  NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

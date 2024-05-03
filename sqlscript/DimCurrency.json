@@ -1,0 +1,17 @@
+{
+	"name": "DimCurrency",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimCurrency]\n( \n\t[CurrencyKey] [int]  NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3)  NOT NULL,\n\t[CurrencyName] [nvarchar](50)  NOT NULL,\n\t[FormatString] [nvarchar](20)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DimReseller",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimReseller]\n( \n\t[ResellerKey] [int]  NOT NULL,\n\t[GeographyKey] [int]  NULL,\n\t[ResellerAlternateKey] [nvarchar](15)  NULL,\n\t[Phone] [nvarchar](25)  NULL,\n\t[BusinessType] [varchar](20)  NOT NULL,\n\t[ResellerName] [nvarchar](50)  NOT NULL,\n\t[NumberEmployees] [int]  NULL,\n\t[OrderFrequency] [char](1)  NULL,\n\t[OrderMonth] [tinyint]  NULL,\n\t[FirstOrderYear] [int]  NULL,\n\t[LastOrderYear] [int]  NULL,\n\t[ProductLine] [nvarchar](50)  NULL,\n\t[AddressLine1] [nvarchar](60)  NULL,\n\t[AddressLine2] [nvarchar](60)  NULL,\n\t[AnnualSales] [money]  NULL,\n\t[BankName] [nvarchar](50)  NULL,\n\t[MinPaymentType] [tinyint]  NULL,\n\t[MinPaymentAmount] [money]  NULL,\n\t[AnnualRevenue] [money]  NULL,\n\t[YearOpened] [int]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
