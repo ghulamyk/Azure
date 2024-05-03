@@ -1,0 +1,17 @@
+{
+	"name": "DimDepartmentGroup",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimDepartmentGroup]\n( \n\t[DepartmentGroupKey] [int]  NOT NULL,\n\t[ParentDepartmentGroupKey] [int]  NULL,\n\t[DepartmentGroupName] [nvarchar](50)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DimProduct",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimProduct]\n( \n\t[ProductKey] [int]  NOT NULL,\n\t[ProductAlternateKey] [nvarchar](25)  NULL,\n\t[ProductSubcategoryKey] [int]  NULL,\n\t[WeightUnitMeasureCode] [nchar](3)  NULL,\n\t[SizeUnitMeasureCode] [nchar](3)  NULL,\n\t[EnglishProductName] [nvarchar](50)  NOT NULL,\n\t[SpanishProductName] [nvarchar](50)  NOT NULL,\n\t[FrenchProductName] [nvarchar](50)  NOT NULL,\n\t[StandardCost] [money]  NULL,\n\t[FinishedGoodsFlag] [bit]  NOT NULL,\n\t[Color] [nvarchar](15)  NOT NULL,\n\t[SafetyStockLevel] [smallint]  NULL,\n\t[ReorderPoint] [smallint]  NULL,\n\t[ListPrice] [money]  NULL,\n\t[Size] [nvarchar](50)  NULL,\n\t[SizeRange] [nvarchar](50)  NULL,\n\t[Weight] [float]  NULL,\n\t[DaysToManufacture] [int]  NULL,\n\t[ProductLine] [nchar](2)  NULL,\n\t[DealerPrice] [money]  NULL,\n\t[Class] [nchar](2)  NULL,\n\t[Style] [nchar](2)  NULL,\n\t[ModelName] [nvarchar](50)  NULL,\n\t[LargePhoto] [varbinary](max)  NULL,\n\t[EnglishDescription] [nvarchar](400)  NULL,\n\t[FrenchDescription] [nvarchar](400)  NULL,\n\t[ChineseDescription] [nvarchar](400)  NULL,\n\t[ArabicDescription] [nvarchar](400)  NULL,\n\t[HebrewDescription] [nvarchar](400)  NULL,\n\t[ThaiDescription] [nvarchar](400)  NULL,\n\t[GermanDescription] [nvarchar](400)  NULL,\n\t[JapaneseDescription] [nvarchar](400)  NULL,\n\t[TurkishDescription] [nvarchar](400)  NULL,\n\t[StartDate] [datetime]  NULL,\n\t[EndDate] [datetime]  NULL,\n\t[Status] [nvarchar](7)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED INDEX \n\t(\n\t\t[ProductKey] ASC\n\t)\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

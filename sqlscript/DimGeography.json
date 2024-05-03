@@ -1,0 +1,17 @@
+{
+	"name": "DimGeography",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimGeography]\n( \n\t[GeographyKey] [int]  NOT NULL,\n\t[City] [nvarchar](30)  NULL,\n\t[StateProvinceCode] [nvarchar](3)  NULL,\n\t[StateProvinceName] [nvarchar](50)  NULL,\n\t[CountryRegionCode] [nvarchar](3)  NULL,\n\t[EnglishCountryRegionName] [nvarchar](50)  NULL,\n\t[SpanishCountryRegionName] [nvarchar](50)  NULL,\n\t[FrenchCountryRegionName] [nvarchar](50)  NULL,\n\t[PostalCode] [nvarchar](15)  NULL,\n\t[SalesTerritoryKey] [int]  NULL,\n\t[IpAddressLocator] [nvarchar](15)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
