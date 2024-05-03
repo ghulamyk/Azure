@@ -1,0 +1,17 @@
+{
+	"name": "DimEmployee",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[DimEmployee]\n( \n\t[EmployeeKey] [int]  NOT NULL,\n\t[ParentEmployeeKey] [int]  NULL,\n\t[EmployeeNationalIDAlternateKey] [nvarchar](15)  NULL,\n\t[ParentEmployeeNationalIDAlternateKey] [nvarchar](15)  NULL,\n\t[SalesTerritoryKey] [int]  NULL,\n\t[FirstName] [nvarchar](50)  NOT NULL,\n\t[LastName] [nvarchar](50)  NOT NULL,\n\t[MiddleName] [nvarchar](50)  NULL,\n\t[NameStyle] [bit]  NOT NULL,\n\t[Title] [nvarchar](50)  NULL,\n\t[HireDate] [date]  NULL,\n\t[BirthDate] [date]  NULL,\n\t[LoginID] [nvarchar](256)  NULL,\n\t[EmailAddress] [nvarchar](50)  NULL,\n\t[Phone] [nvarchar](25)  NULL,\n\t[MaritalStatus] [nchar](1)  NULL,\n\t[EmergencyContactName] [nvarchar](50)  NULL,\n\t[EmergencyContactPhone] [nvarchar](25)  NULL,\n\t[SalariedFlag] [bit]  NULL,\n\t[Gender] [nchar](1)  NULL,\n\t[PayFrequency] [tinyint]  NULL,\n\t[BaseRate] [money]  NULL,\n\t[VacationHours] [smallint]  NULL,\n\t[SickLeaveHours] [smallint]  NULL,\n\t[CurrentFlag] [bit]  NOT NULL,\n\t[SalespersonFlag] [bit]  NOT NULL,\n\t[DepartmentName] [nvarchar](50)  NULL,\n\t[StartDate] [date]  NULL,\n\t[EndDate] [date]  NULL,\n\t[Status] [nvarchar](50)  NULL,\n\t[EmployeePhoto] [varbinary](max)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED INDEX \n\t(\n\t\t[EmployeeKey] ASC\n\t)\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
