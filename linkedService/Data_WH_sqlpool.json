@@ -1,0 +1,15 @@
+{
+	"name": "Data_WH_sqlpool",
+	"properties": {
+		"description": "Dedicated SQL Pool",
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=synapse2hz5bwi.sql.azuresynapse.net;Initial Catalog=synapsesqlpool"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
