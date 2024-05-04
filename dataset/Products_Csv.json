@@ -1,0 +1,43 @@
+{
+	"name": "Products_Csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Data_WH_sqlpool",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "ProductID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Color",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Size",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ListPrice",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Discontinued",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "dimProducts"
+		}
+	}
+}
