@@ -1,0 +1,17 @@
+{
+	"name": "dimProducts",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[dimProducts]\n( \n\t[ProductID] [nvarchar]  NOT NULL,\n\t[ProductName] [nvarchar] NULL,\n\t[Color] [nvarchar]  NULL,\n\t[Size] [nvarchar]  NULL,\n\t[ListPrice] [float]  NULL,\n\t[Discontinued] [nvarchar]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsesqlpool",
+				"poolName": "synapsesqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
