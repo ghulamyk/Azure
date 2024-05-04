@@ -1,10 +1,12 @@
 {
 	"name": "AzureSqlDatabase",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=dp-lwtw-server.database.windows.net;Initial Catalog=DP-LwTN-DB"
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=dp-lwtw-server.database.windows.net;initial catalog=DP-LwTN-DB;user id=adm_ghulam",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIlNZTkFQU0VARjA0RkQxNTItOTY3RS00MDkxLTgzRkMtMTNGNkExNUFGODBEXzcyM2U1M2M5LTZkYjEtNDdlYi05MDg2LTg0MWE4NTY2Zjk0NSINCn0="
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
