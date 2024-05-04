@@ -1,0 +1,14 @@
+{
+	"name": "AzureSqlDatabase",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=dp-lwtw-server.database.windows.net;Initial Catalog=DP-LwTN-DB"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
