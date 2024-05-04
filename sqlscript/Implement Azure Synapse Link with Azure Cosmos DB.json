@@ -1,0 +1,17 @@
+{
+	"name": "Implement Azure Synapse Link with Azure Cosmos DB",
+	"properties": {
+		"content": {
+			"query": "CREATE CREDENTIAL mycosmosdbcre\n WITH IDENTITY = 'SHARED ACCESS SIGNATURE',\n SECRET = 'QDR0kDjInplQCzo8WXF4n4JOqalx2P97BVmrI37HpqzjWdwmLawjOzeiJUPiCagD8Xd3Njx4GILkACDbkz06Zw=='\n GO\n\nSELECT TOP 100 *\nFROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=dplwcosmosdb;Database=cosmosdb',\n                OBJECT = 'cosmos-container',\n                SERVER_CREDENTIAL = 'mycosmosdbcre'\n) AS [cosmos-container]\n\n\nSELECT *\n FROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=dplwcosmosdb;Database=cosmosdb',\n                OBJECT = 'cosmos-container',\n                SERVER_CREDENTIAL = 'mycosmosdbcre'\n )\n WITH (\n     OrderID VARCHAR(10) '$.id',\n     OrderDate VARCHAR(10) '$.orderdate',\n     CustomerID INTEGER '$.customerid',\n     CustomerName VARCHAR(40) '$.customerdetails.customername',\n     CustomerEmail VARCHAR(30) '$.customerdetails.customeremail',\n     Product VARCHAR(30) '$.product',\n     Quantity INTEGER '$.quantity',\n     Price FLOAT '$.price'\n )\n AS sales\n ORDER BY OrderID;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
