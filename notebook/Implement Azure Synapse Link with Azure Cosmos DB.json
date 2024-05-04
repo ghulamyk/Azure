@@ -1,0 +1,135 @@
+{
+	"name": "Implement Azure Synapse Link with Azure Cosmos DB",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "edb74e1e-a5ac-4d8d-948e-e7a68a936796"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f9d86f3-8491-4c51-b73d-2a72034825b3/resourceGroups/dp500-2hz5bwi/providers/Microsoft.Synapse/workspaces/synapse2hz5bwi/bigDataPools/sparkpool",
+				"name": "sparkpool",
+				"type": "Spark",
+				"endpoint": "https://synapse2hz5bwi.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"# Read from Cosmos DB analytical store into a Spark DataFrame and display 10 rows from the DataFrame\n",
+					"# To select a preferred list of regions in a multi-region Cosmos DB account, add .option(\"spark.cosmos.preferredRegions\", \"<Region1>,<Region2>\")\n",
+					"\n",
+					"df = spark.read\\\n",
+					"    .format(\"cosmos.olap\")\\\n",
+					"    .option(\"spark.synapse.linkedService\", \"CosmosDbNoSQL\")\\\n",
+					"    .option(\"spark.cosmos.container\", \"cosmos-container\")\\\n",
+					"    .load()\n",
+					"\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					" %%sql\r\n",
+					"\r\n",
+					" -- Create a logical database in the Spark metastore\r\n",
+					" CREATE DATABASE cosmossalesdb;\r\n",
+					"\r\n",
+					" USE cosmossalesdb;\r\n",
+					"\r\n",
+					" -- Create a table from the Cosmos DB container\r\n",
+					" CREATE TABLE cosmossalesorders using cosmos.olap options (\r\n",
+					"     spark.synapse.linkedService 'CosmosDbNoSQL',\r\n",
+					"     spark.cosmos.container 'cosmos-container'\r\n",
+					" );\r\n",
+					"\r\n",
+					" -- Query the table\r\n",
+					" SELECT *\r\n",
+					" FROM cosmossalesorders;"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT id, orderdate, customerdetails.customername, product\r\n",
+					"FROM cosmossalesorders\r\n",
+					"ORDER BY id;"
+				],
+				"execution_count": 20
+			}
+		]
+	}
+}
